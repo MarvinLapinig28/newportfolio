@@ -1627,35 +1627,37 @@
           </div>
 
           <div class="col-lg-8">
-            <form method="post" class="php-email-form" role="form">
-              <div class="row gy-4">
+            
+<form id="contact-form" method="post" class="php-email-form" role="form">
+    <div class="row gy-4">
 
-                <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
-                </div>
+        <div class="col-md-6">
+            <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+        </div>
 
-                <div class="col-md-6">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
-                </div>
+        <div class="col-md-6">
+            <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+        </div>
 
-                <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
-                </div>
+        <div class="col-md-12">
+            <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+        </div>
 
-                <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
-                </div>
+        <div class="col-md-12">
+            <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+        </div>
 
-                <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+        <div class="col-md-12 text-center">
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your message has been sent. Thank you!</div>
 
-                  <button type="submit" id="click">Send Message</button>
-                </div>
+            <button type="submit" id="click">Send Message</button>
+        </div>
 
-              </div>
-            </form>
+    </div>
+</form>
+
           </div>
 
         </div>
@@ -1727,7 +1729,6 @@
 
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/typed.js/typed.umd.js"></script>
   <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
@@ -1740,15 +1741,63 @@
   <script src="assets/js/main.js"></script>
 
     <script src="assets/js/main.js"></script>
-  <script>
-    $('#click').on('click',function(){
-              Swal.fire({
-          title: "Still Working!",
-          
-          icon: "success"
+  
+
+    <!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+    // Initialize EmailJS
+    emailjs.init({
+        publicKey: "02_61DPAT2tXKBzFg"
+    });
+
+    const contactForm = document.getElementById("contact-form");
+
+    contactForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const button = document.getElementById("click");
+        const loading = document.querySelector(".loading");
+        const errorMessage = document.querySelector(".error-message");
+        const sentMessage = document.querySelector(".sent-message");
+
+        // Reset messages
+        errorMessage.style.display = "none";
+        sentMessage.style.display = "none";
+
+        loading.style.display = "block";
+        button.disabled = true;
+
+        emailjs.sendForm(
+            "service_1y4k0ue",
+            "template_o767bug",
+            contactForm
+        )
+        .then(function() {
+
+            loading.style.display = "none";
+            sentMessage.style.display = "block";
+
+            contactForm.reset();
+
+        })
+        .catch(function(error) {
+
+            loading.style.display = "none";
+            errorMessage.style.display = "block";
+            errorMessage.innerText = "Message failed to send. Please try again.";
+
+            console.error("EmailJS Error:", error);
+
+        })
+        .finally(function() {
+
+            button.disabled = false;
+
         });
-    })
-  </script>
+    });
+</script>
 
 </body>
 
